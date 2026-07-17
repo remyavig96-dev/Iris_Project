@@ -1,22 +1,26 @@
-from fastapi import FastAPI
+import streamlit as st
 import joblib
 
-app = FastAPI()
+model=joblib.load("iris_model.pkl")
 
-# Load the saved model
-model = joblib.load("iris_model.pkl")
+st.title("Iris Flower Predictor")
 
-flowers = ["Setosa", "Versicolor", "Virginica"]
+sl=st.number_input("Sepal Length")
 
-@app.get("/")
-def home():
-    return {"message": "Iris Prediction API"}
+sw=st.number_input("Sepal Width")
 
-@app.get("/predict")
-def predict():
+pl=st.number_input("Petal Length")
 
-    result = model.predict([[5.1, 3.5, 1.4, 0.2]])
+pw=st.number_input("Petal Width")
 
-    return {
-        "prediction": flowers[result[0]]
-    }
+if st.button("Predict"):
+
+    prediction=model.predict([[sl,sw,pl,pw]])
+
+    flowers=[
+        "Setosa",
+        "Versicolor",
+        "Virginica"
+    ]
+
+    st.success(flowers[prediction[0]])
